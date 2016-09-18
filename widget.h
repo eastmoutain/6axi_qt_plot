@@ -12,8 +12,38 @@
 #include <QTime>
 
 struct sensor_data {
-    int16_t ax, ay, az;
-    int16_t gx, gy, gz;
+    union {
+        int16_t a[3];
+        struct {
+            int16_t ax;
+            int16_t ay;
+            int16_t az;
+        };
+    };
+
+    union {
+        int16_t g[3];
+        struct {int16_t gx, gy, gz;};
+    };
+
+};
+
+struct gyro_data {
+    union {
+        double g[3];
+        struct {
+            double gx, gy, gz;
+        };
+    };
+};
+
+struct acc_data {
+    union {
+        double a[3];
+        struct {
+            double ax, ay, az;
+        };
+    };
 };
 
 struct xr {
@@ -41,6 +71,12 @@ public:
         GZ
     };
 
+    enum {
+        X = 0,
+        Y,
+        Z,
+    };
+
     void addpoint(double _ax, double _ay, double _az);
 
 private slots:
@@ -59,10 +95,37 @@ private:
     Ui::Widget *ui;
     QTcpSocket *socket;
     bool isConnected;
+    bool gyro_calibrated;
+    bool acc_est_initialized;
+    struct gyro_data gyro_cali;
     struct sensor_data sd_raw;
     struct sensor_data sd;
     double a_u; // acce uniform value
     struct xr xra;
+    union {
+        double Rest_pre[3];
+    };
+    union {
+        double Amn_pre[3];
+        double Ayz_pre;
+        double Axz_pre;
+        double Axy_pre;
+    };
+
+    union {
+        double Amn_now[3];
+        double Ayz_now;
+        double Axz_now;
+        double Axy_now;
+    };
+
+    union {
+        double Rgyro[3];
+        double Rxgyro;
+        double Rygyro;
+        double Rzgryo;
+    };
+
 
     QwtPlot *plot;
     QwtPlotCurve *curve_ax, *curve_ay, *curve_az;
