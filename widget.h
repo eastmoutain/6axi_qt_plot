@@ -77,7 +77,7 @@ public:
         Z,
     };
 
-    void addpoint(double _ax, double _ay, double _az);
+    void addpoint(double _ax, double _ay, double _az, double _eax, double _eay, double _eaz);
 
 private slots:
     void connectedSlot();
@@ -87,6 +87,8 @@ private slots:
 
 
     void on_pushButton_clicked();
+
+    void on_pushButton_2_clicked();
 
 protected:
     void update_curve();
@@ -128,8 +130,8 @@ private:
 
 
     QwtPlot *plot;
-    QwtPlotCurve *curve_ax, *curve_ay, *curve_az;
-    QVector<double> *ax, *ay, *az, *at;
+    QwtPlotCurve *curve_ax, *curve_ay, *curve_az, *curve_eax, *curve_eay, *curve_eaz;
+    QVector<double> *ax, *ay, *az, *eax, *eay, *eaz, *at;
     QTime g_timer;
 
     void init_plot();
